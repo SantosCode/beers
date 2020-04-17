@@ -12,6 +12,6 @@ import java.util.List;
 public class BeerResponse {
     @Getter @Setter
     @JsonProperty("beers")
-    @ApiModelProperty(name = "beers", notes = "Response com a lista de cervejas")
+    @ApiModelProperty(name = "cervejas", notes = "Response com a lista de cervejas")
     List<BeerDTO> response;
 }

@@ -3,7 +3,7 @@ package br.com.midway.beersapi.dto;
 import br.com.midway.beersapi.model.BoilVolume;
 import br.com.midway.beersapi.model.Ingredients;
 import br.com.midway.beersapi.model.Method;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,48 +11,50 @@ import java.util.List;
 
 @Getter @Setter
 public class BeerDTO {
-    @JsonProperty("id")
+    @ApiModelProperty(name = "id", position = 1)
     private Long id;
-    @JsonProperty("name")
+    @ApiModelProperty(name = "name", position = 2)
     private String name;
-    @JsonProperty("tagline")
+    @ApiModelProperty(name = "tagline", position = 4)
     private String tagline;
-    @JsonProperty("first_brewed")
+    @ApiModelProperty(name = "first_brewed", position = 5)
     private String firstBrewed;
-    @JsonProperty("description")
+    @ApiModelProperty(name = "description", position = 6)
     private String description;
-    @JsonProperty("image_url")
+    @ApiModelProperty(name = "image_url", position = 7)
     private String imageUrl;
-    @JsonProperty("abv")
+    @ApiModelProperty(name = "abv", position = 8)
     private Double abv;
-    @JsonProperty("ibu")
+    @ApiModelProperty(name = "ibu", position = 9)
     private Long ibu;
-    @JsonProperty("target_fg")
+    @ApiModelProperty(name = "target_fg", position = 10)
     private Long targetFg;
-    @JsonProperty("target_og")
+    @ApiModelProperty(name = "target_og", position = 11)
     private Long targetOg;
-    @JsonProperty("ebc")
+    @ApiModelProperty(name = "ebc", position = 12)
     private Long ebc;
-    @JsonProperty("srm")
+    @ApiModelProperty(name = "srm", position = 13)
     private Long srm;
-    @JsonProperty("ph")
+    @ApiModelProperty(name = "ph", position = 14)
     private Double ph;
-    @JsonProperty("attenuation_level")
+    @ApiModelProperty(name = "attenuation_level", position = 15)
     private Long attenuationLevel;
-    @JsonProperty("volume")
+    @ApiModelProperty(name = "volume", position = 16)
     private BoilVolume volume;
-    @JsonProperty("boil_volume")
+    @ApiModelProperty(name = "boil_volume", position = 17)
     private BoilVolume boilVolume;
-    @JsonProperty("method")
+    @ApiModelProperty(name = "method", position = 18)
     private Method method;
-    @JsonProperty("ingredients")
+    @ApiModelProperty(name = "ingredients", position = 19)
     private Ingredients ingredients;
-    @JsonProperty("food_pairing")
+    @ApiModelProperty(name = "food_pairing", position = 20)
     private List<String> foodPairing;
-    @JsonProperty("brewers_tips")
+    @ApiModelProperty(name = "brewers_tips", position = 21)
     private String brewersTips;
-    @JsonProperty("contributed_by")
+    @ApiModelProperty(name = "contributed_by", position = 22)
     private String contributedBy;
+    @ApiModelProperty(name = "version", position = 13)
     private Long version;
+    @ApiModelProperty(name = "ip", position = 14)
     private String ip;
 }

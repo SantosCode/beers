@@ -14,9 +14,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-import static org.springframework.http.ResponseEntity.*;
+import static org.springframework.http.ResponseEntity.noContent;
 
 @CrossOrigin("*")
 @RestController
@@ -62,10 +64,9 @@ public class BeerResource {
             @ApiResponse(code = 200, message = "Retorna a cerveja alterada"),
             @ApiResponse(code = 400, response = BeerExceptionHandler.Erro.class, message = "Bad Request!")
     })
-    @PatchMapping("/atualizar-desc")
-    public ResponseEntity<BeerResponse> updateDesc(@RequestBody @Validated RequestDescription requestDescription) {
-        Optional<BeerDTO> beerDTO = service.updateDescription(requestDescription.getId(),
-                requestDescription.getDescription(), request);
+    @PatchMapping("/atualizar-desc/{id}")
+    public ResponseEntity<BeerResponse> updateDesc(@RequestBody @Validated RequestDescription requestBody, @PathVariable Long id) {
+        Optional<BeerDTO> beerDTO = service.updateDescription(id, requestBody.getDescription(), request);
         List<BeerDTO> beerDTOList = Collections.singletonList(beerDTO.get());
         Optional<BeerResponse> response = Optional.of(new BeerResponse(beerDTOList));
         return response.map(ResponseEntity::ok).orElseGet(() -> noContent().build());

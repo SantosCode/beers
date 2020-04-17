@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.validation.UnexpectedTypeException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Log4j2
 @ControllerAdvice
@@ -53,6 +54,11 @@ public class BeerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({UnexpectedTypeException.class})
     public ResponseEntity<Object> handleUnexpectedTypeException(UnexpectedTypeException ex, WebRequest request) {
+        return getObjectResponseEntity(ex, request);
+    }
+
+    @ExceptionHandler({NoSuchElementException.class})
+    public ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException ex, WebRequest request) {
         return getObjectResponseEntity(ex, request);
     }
 

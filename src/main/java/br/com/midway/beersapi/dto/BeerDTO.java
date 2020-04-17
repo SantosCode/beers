@@ -53,4 +53,6 @@ public class BeerDTO {
     private String brewersTips;
     @JsonProperty("contributed_by")
     private String contributedBy;
+    private Long version;
+    private String ip;
 }

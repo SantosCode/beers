@@ -48,7 +48,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("BEERS API")
-                .description("Avaliação de conhecimentos da MidWAy")
+                .description("Avaliação de conhecimentos para MidWAy")
                 .version("1.0.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
                 .contact(new Contact("Luis Carlos Santos", "",

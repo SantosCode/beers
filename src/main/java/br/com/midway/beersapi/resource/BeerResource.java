@@ -13,9 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 import static org.springframework.http.ResponseEntity.*;
 
@@ -25,10 +24,13 @@ import static org.springframework.http.ResponseEntity.*;
 public class BeerResource {
 
     private BeerService service;
+    private HttpServletRequest request;
+
 
     @Autowired
-    public BeerResource(BeerService service) {
+    public BeerResource(BeerService service, HttpServletRequest request) {
         this.service = service;
+        this.request = request;
     }
 
     @ApiOperation(value = "Listar todas as cervejas")
@@ -42,16 +44,29 @@ public class BeerResource {
         return response.map(ResponseEntity::ok).orElseGet(() -> noContent().build());
     }
 
-    @ApiOperation(value = "atualizar descrição de uma cerveja")
+    @ApiOperation(value = "Buscar cerveja pelo id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Retorna a cervejas pesquisada"),
+            @ApiResponse(code = 400, response = BeerExceptionHandler.Erro.class, message = "Bad Request!")
+    })
+    @GetMapping("/buscar-id/{id}")
+    public ResponseEntity<BeerResponse> getOne(@PathVariable Long id) {
+        Optional<BeerDTO>  beerDTO = service.getOne(id);
+        List<BeerDTO> beerDTOList = Collections.singletonList(beerDTO.get());
+        Optional<BeerResponse> response = Optional.of(new BeerResponse(beerDTOList));
+        return response.map(ResponseEntity::ok).orElseGet(() -> noContent().build());
+    }
+
+    @ApiOperation(value = "Atualizar descrição de uma cerveja")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Retorna a cerveja alterada"),
             @ApiResponse(code = 400, response = BeerExceptionHandler.Erro.class, message = "Bad Request!")
     })
     @PatchMapping("/atualizar-desc")
-    public ResponseEntity<BeerResponse> updateDesc(@RequestBody @Validated RequestDescription request) {
-        Optional<BeerDTO> beerDTO = service.updateDescription(request.getId(), request.getDescription());
-        List<BeerDTO> beerDTOList = new ArrayList<>();
-        beerDTOList.add(beerDTO.get());
+    public ResponseEntity<BeerResponse> updateDesc(@RequestBody @Validated RequestDescription requestDescription) {
+        Optional<BeerDTO> beerDTO = service.updateDescription(requestDescription.getId(),
+                requestDescription.getDescription(), request);
+        List<BeerDTO> beerDTOList = Collections.singletonList(beerDTO.get());
         Optional<BeerResponse> response = Optional.of(new BeerResponse(beerDTOList));
         return response.map(ResponseEntity::ok).orElseGet(() -> noContent().build());
     }

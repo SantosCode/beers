@@ -11,6 +11,8 @@ import java.util.List;
 @Getter @Setter
 @Document
 public class Beer {
+
+
     @Id
     private String _id;
     @Indexed(unique = true)
@@ -35,4 +37,6 @@ public class Beer {
     private List<String> foodPairing;
     private String brewersTips;
     private String contributedBy;
+    private Long version = 1L;
+    private String ip;
 }

@@ -9,6 +9,8 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Generated;
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
@@ -43,15 +45,19 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Optional<BeerDTO> updateDescription(Long id, String description) {
+    public Optional<BeerDTO> updateDescription(Long id, String description,
+            HttpServletRequest request) {
         if (description != null && id != null) {
             Optional<Beer> beer = repository.findBeerById(id);
             if (beer.isPresent()) {
                 beer.get().setDescription(description);
+                beer.get().setIp(request.getRemoteAddr());
+                beer.get().setVersion(beer.get().getVersion() + 1);
                 repository.save(beer.get());
                 Optional<Beer> beerRecuperado = repository.findBeerById(id);
                 Type typeDto = new TypeToken<Optional<BeerDTO>>(){}.getType();
-                return mapper.map(beerRecuperado, typeDto);
+                Optional<BeerDTO> beerDTO = mapper.map(beerRecuperado, typeDto);
+                return beerDTO.isPresent() ? beerDTO : Optional.empty();
             }
         }
         return Optional.empty();

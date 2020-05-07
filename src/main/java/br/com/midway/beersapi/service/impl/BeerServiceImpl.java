@@ -4,22 +4,26 @@ import br.com.midway.beersapi.dto.BeerDTO;
 import br.com.midway.beersapi.model.Beer;
 import br.com.midway.beersapi.repository.BeerRepository;
 import br.com.midway.beersapi.service.BeerService;
+import lombok.val;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Generated;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class BeerServiceImpl implements BeerService {
 
-    private BeerRepository repository;
-    private ModelMapper mapper = new ModelMapper();
+    private final BeerRepository repository;
+    private final ModelMapper mapper = new ModelMapper();
+    private final Type typeDto = new TypeToken<List<BeerDTO>>() {}.getType();
 
     @Autowired
     public BeerServiceImpl(BeerRepository repository) {
@@ -28,36 +32,33 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     public Optional<List<BeerDTO>> getAll() {
-        List<Beer> beerList = repository.findAll();
-        Type typeList = new TypeToken<List<BeerDTO>>(){}.getType();
-        Optional<List<BeerDTO>> beers = Optional.of(mapper.map(beerList, typeList));
-        return beers.isPresent() ? beers : Optional.empty();
+        val beerList = repository.findAll();
+        return Optional.of(mapper.map(beerList, typeDto));
     }
 
     @Override
-    public Optional<BeerDTO> getOne(Long id) {
-        Optional<Beer> beer = repository.findBeerById(id);
+    public Optional<List<BeerDTO>> getOne(Long id) {
+        val beer = repository.findBeerById(id);
         if (beer.isPresent()) {
-            Type typeDto = new TypeToken<Optional<BeerDTO>>(){}.getType();
-            return mapper.map(beer, typeDto);
+            val beerList = Collections.singletonList(beer.get());
+            return Optional.of(mapper.map(beerList, typeDto));
         }
         return Optional.empty();
     }
 
     @Override
-    public Optional<BeerDTO> updateDescription(Long id, String description,
+    public Optional<List<BeerDTO>> updateDescription(Long id, String description,
             HttpServletRequest request) {
         if (description != null && id != null) {
-            Optional<Beer> beer = repository.findBeerById(id);
+            val beer = repository.findBeerById(id);
             if (beer.isPresent()) {
                 beer.get().setDescription(description);
                 beer.get().setIp(request.getRemoteAddr());
                 beer.get().setVersion(beer.get().getVersion() + 1);
                 repository.save(beer.get());
-                Optional<Beer> beerRecuperado = repository.findBeerById(id);
-                Type typeDto = new TypeToken<Optional<BeerDTO>>(){}.getType();
-                Optional<BeerDTO> beerDTO = mapper.map(beerRecuperado, typeDto);
-                return beerDTO.isPresent() ? beerDTO : Optional.empty();
+                val beerRecuperado = repository.findBeerById(id);
+                val beerList = Collections.singletonList(beerRecuperado.get());
+                return Optional.of(mapper.map(beerList, typeDto));
             }
         }
         return Optional.empty();

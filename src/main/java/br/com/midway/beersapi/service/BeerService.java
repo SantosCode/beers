@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface BeerService {
 
     Optional<List<BeerDTO>> getAll();
-    Optional<BeerDTO> getOne(Long id);
-    Optional<BeerDTO> updateDescription(Long id, String description, HttpServletRequest request);
+    Optional<List<BeerDTO>> getOne(Long id);
+    Optional<List<BeerDTO>> updateDescription(Long id, String description, HttpServletRequest request);
 }
